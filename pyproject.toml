@@ -1,0 +1,19 @@
+[project]
+name = "jogo-do-advogado"
+version = "0.1.0"
+description = "API do Jogo do Advogado (Django + Django Ninja)"
+requires-python = ">=3.11"
+
+dependencies = [
+    "django>=5.0,<6.0",
+    "django-environ>=0.14.0",
+    "django-ninja>=1.1.0",
+    "django-ninja-jwt>=5.3.0",
+    "pillow>=10.0",
+    "psycopg[binary]>=3.1",
+]
+
+[dependency-groups]
+dev = [
+    "django-debug-toolbar",
+]
