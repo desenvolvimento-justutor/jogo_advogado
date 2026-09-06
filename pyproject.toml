@@ -16,4 +16,48 @@ dependencies = [
 [dependency-groups]
 dev = [
     "django-debug-toolbar",
+    "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
+    "pytest-django>=4.14.0",
 ]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings"
+python_files = [
+    "tests_*.py",
+    "*_test.py",
+    "tests.py",
+]
+testpaths = ["tests"]
+addopts = [
+    "-ra",
+    "--strict-config",
+    "--strict-markers",
+]
+
+[tool.coverage.run]
+branch = true
+source = [
+    "apps",
+]
+omit = [
+    "*/migrations/*",
+    "*/admin.py",
+    "*/apps.py",
+    "*/management/*",
+    "*/tests/*",
+    "*/__init__.py",
+]
+
+[tool.coverage.report]
+exclude_also = [
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+    "@overload",
+]
+show_missing = true
+skip_covered = true
+fail_under = 80
+
+[tool.coverage.html]
+directory = "htmlcov"

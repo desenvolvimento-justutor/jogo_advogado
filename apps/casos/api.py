@@ -68,10 +68,13 @@ def listar_casos(
 def detalhar_caso(request, caso_id: int):
     caso = get_object_or_404(Caso.objects.select_related("disciplina"), id=caso_id, ativo=True)
     ja_iniciado = Jogada.objects.filter(aluno=request.user, caso=caso).exists()
-    data = CasoDetailOut.from_orm(caso)
-    data.ja_iniciado = ja_iniciado
-    data.total_perguntas = caso.perguntas.count()
-    return data
+    base = CasoListOut.from_orm(caso).dict(exclude={"ja_iniciado"})
+    return CasoDetailOut(
+        **base,
+        texto_detalhado=caso.texto_detalhado,
+        total_perguntas=caso.perguntas.count(),
+        ja_iniciado=ja_iniciado,
+    )
 
 
 @router.post("/{caso_id}/avaliar/", response=AvaliacaoOut)

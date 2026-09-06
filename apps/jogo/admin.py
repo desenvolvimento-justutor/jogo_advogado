@@ -5,7 +5,7 @@ from .models import Alternativa, ConteudoExtra, Jogada, Pergunta, RespostaJogada
 
 class AlternativaInline(admin.TabularInline):
     model = Alternativa
-    extra = 2
+    extra = 0
 
 
 class ConteudoExtraInline(admin.TabularInline):
