@@ -301,3 +301,54 @@ footer.rodape a:hover { color: var(--latao-claro); }
 @media (max-width: 767.98px) {
   .cartao-processo { transform: none; margin-top: 2rem; }
 }
+
+/* ---------- Selo "grátis" nas abas de caso ---------- */
+.aba-caso .disciplina.selo-gratis { color: var(--verde-gratis); }
+
+/* ---------- Autenticação (login / cadastro) ---------- */
+.cartao-auth {
+  background: #fff;
+  border: 1px solid var(--borda);
+  border-top: 4px solid var(--latao);
+  border-radius: 0.5rem;
+  padding: 2rem;
+  max-width: 440px;
+  margin: 0 auto;
+}
+.cartao-auth .form-control {
+  border-color: var(--borda);
+}
+.cartao-auth .form-control:focus {
+  border-color: var(--latao);
+  box-shadow: 0 0 0 0.2rem rgba(184, 145, 47, 0.2);
+}
+.btn-google {
+  background-color: #fff;
+  border: 1px solid var(--borda);
+  color: var(--grafite);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+}
+.btn-google:hover {
+  background-color: var(--papel-2);
+  color: var(--grafite);
+}
+.separador-ou {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--grafite);
+  opacity: 0.6;
+  font-size: 0.85rem;
+  margin: 1.25rem 0;
+}
+.separador-ou::before,
+.separador-ou::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--borda);
+}

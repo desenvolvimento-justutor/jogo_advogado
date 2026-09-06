@@ -1,0 +1,51 @@
+{% extends "site/base.html" %}
+{% load socialaccount %}
+
+{% block titulo %}Criar conta — Jogo do Advogado{% endblock %}
+
+{% block conteudo %}
+{% get_providers as socialaccount_providers %}
+<section class="py-5 py-lg-6">
+  <div class="container py-4">
+    <div class="cartao-auth">
+      <h1 class="fonte-titulo h3 mb-1 text-center">Criar conta</h1>
+      <p class="text-muted small text-center mb-4">
+        Já tem conta? <a href="{% url 'account_login' %}">Entrar</a>.
+      </p>
+
+      {% if socialaccount_providers %}
+        <a href="{% provider_login_url 'google' %}" class="btn btn-google w-100 mb-3">
+          Cadastrar com Google
+        </a>
+        <div class="separador-ou">ou cadastre-se com e-mail</div>
+      {% endif %}
+
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+          {% for erro in form.non_field_errors %}<div>{{ erro }}</div>{% endfor %}
+        </div>
+      {% endif %}
+
+      <form method="post" action="{% url 'account_signup' %}">
+        {% csrf_token %}
+        {% for field in form %}
+          <div class="mb-3">
+            <label for="{{ field.id_for_label }}" class="form-label small fw-semibold">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}
+              <div class="form-text small">{{ field.help_text }}</div>
+            {% endif %}
+            {% for erro in field.errors %}
+              <div class="text-danger small mt-1">{{ erro }}</div>
+            {% endfor %}
+          </div>
+        {% endfor %}
+        {% if redirect_field_value %}
+          <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">
+        {% endif %}
+        <button type="submit" class="btn btn-latao w-100">Criar conta</button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

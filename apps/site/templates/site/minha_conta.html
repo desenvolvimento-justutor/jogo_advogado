@@ -1,0 +1,43 @@
+{% extends "site/base.html" %}
+
+{% block titulo %}Minha conta — Jogo do Advogado{% endblock %}
+
+{% block conteudo %}
+
+<section class="py-5 py-lg-6">
+  <div class="container py-4">
+    <div class="row justify-content-center">
+      <div class="col-lg-7">
+        <span class="processo-tag">Minha conta</span>
+        <h1 class="fonte-titulo fw-semibold mb-4">
+          Olá, {{ perfil.nome_jogador|default:user.email }}
+        </h1>
+
+        <div class="cartao-processo mb-4" style="transform:none;">
+          <div class="cabecalho">
+            <span>Pontuação total</span>
+            <span class="text-latao">{{ perfil.pontuacao_total|default:0 }} pts</span>
+          </div>
+          <div class="linha-tela">
+            <span class="marcador">✉</span>
+            <span>{{ user.email }}</span>
+          </div>
+          {% if perfil.instituicao %}
+            <div class="linha-tela">
+              <span class="marcador">🎓</span>
+              <span>{{ perfil.instituicao.nome }} ({{ perfil.instituicao.estado }})</span>
+            </div>
+          {% endif %}
+        </div>
+
+        <p class="text-muted">
+          O jogo em si roda pelo aplicativo — em breve você poderá baixá-lo e continuar
+          de onde parou com esta mesma conta.
+        </p>
+        <a href="{% url 'site_publico:area_gratuita' %}" class="btn btn-outline-papel">Ver área gratuita</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

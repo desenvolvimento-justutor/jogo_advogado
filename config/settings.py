@@ -14,7 +14,7 @@ DEBUG = env.bool("DJANGO_DEBUG", default=False)
 ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=[])
 
 # Permite que o Render injete o domínio público do serviço automaticamente.
-RENDER_EXTERNAL_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
+RENDER_EXTERNAL_HOSTNAME = env("RENDER_EXTERNAL_HOSTNAME", default=False)
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
@@ -27,13 +27,22 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # Terceiros
     "ninja_jwt",
-    # Apps do projeto
+    "django_bootstrap5",
+    "django.contrib.sites",
+    # Apps do projeto (antes do allauth: apps.site sobrescreve os templates
+    # account/*.html e socialaccount/*.html do allauth — o app_directories
+    # loader usa o primeiro template encontrado na ordem do INSTALLED_APPS)
     "apps.contas",
     "apps.casos",
     "apps.jogo",
     "apps.ranking",
     "apps.premium",
     "apps.site",
+    # allauth (depois dos apps do projeto, ver comentário acima)
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
 ]
 
 MIDDLEWARE = [
@@ -43,6 +52,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -115,3 +125,47 @@ NINJA_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=14),
     "ROTATE_REFRESH_TOKENS": True,
 }
+
+# django-allauth (autenticação do site institucional: e-mail/senha + Google)
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+]
+
+ACCOUNT_LOGIN_METHODS = {"email"}
+ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
+ACCOUNT_EMAIL_VERIFICATION = "optional"  # trocar para "mandatory" quando o envio de e-mail estiver configurado
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_RATE_LIMITS = {"login_failed": "5/5m"}
+
+LOGIN_URL = "account_login"
+LOGIN_REDIRECT_URL = "site_publico:minha_conta"
+ACCOUNT_LOGOUT_REDIRECT_URL = "site_publico:home"
+
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "SCOPE": ["profile", "email"],
+        "AUTH_PARAMS": {"access_type": "online"},
+        "APP": {
+            "client_id": env("GOOGLE_CLIENT_ID", default=""),
+            "secret": env("GOOGLE_CLIENT_SECRET", default=""),
+            "key": "",
+        },
+    }
+}
+SOCIALACCOUNT_LOGIN_ON_GET = True  # pula a tela intermediária de confirmação do allauth
+
+ACCOUNT_FORMS = {
+    "login": "apps.site.forms.LoginForm",
+    "signup": "apps.site.forms.SignupForm",
+}
+
+# E-mail: por padrão só imprime no console (dev). Em produção, configure
+# EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend + EMAIL_HOST/PORT/
+# HOST_USER/HOST_PASSWORD/USE_TLS via variáveis de ambiente.
+EMAIL_BACKEND = env(
+    "EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend"
+)
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="contato@jogodoadvogado.com.br")

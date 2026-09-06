@@ -1,0 +1,48 @@
+{% extends "site/base.html" %}
+
+{% block titulo %}Área gratuita — Jogo do Advogado{% endblock %}
+{% block ativo_gratuita %}active{% endblock %}
+
+{% block conteudo %}
+
+<section class="py-5 bg-tinta">
+  <div class="container py-4 text-center">
+    <span class="processo-tag">Acesso livre</span>
+    <h1 class="fonte-titulo fw-semibold" style="color: var(--papel); max-width: 26ch; margin: 0 auto;">Jogue de graça, sem cadastro, e conheça o jogo por dentro</h1>
+    <p class="lead mx-auto" style="color: rgba(246,241,231,.8); max-width: 46ch;">Uma seleção de casos completos, escolhidos para você experimentar o Jogo do Advogado antes de decidir por um plano.</p>
+  </div>
+</section>
+
+<section class="py-5 py-lg-6">
+  <div class="container py-4">
+    {% if casos %}
+      <div class="row g-4">
+        {% for caso in casos %}
+          <div class="col-md-4">
+            <div class="aba-caso">
+              <span class="disciplina selo-gratis">{{ caso.disciplina.nome }} · Grátis</span>
+              <h5>{{ caso.nome }}</h5>
+              <p class="text-muted small mb-0">{{ caso.texto_curto }}</p>
+              <div class="rodape-aba">
+                <span>{{ caso.get_duracao_display }}</span>
+                <span>{{ caso.get_tipo_caso_display }}</span>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-center text-muted">Nenhum caso na área gratuita no momento — volte em breve.</p>
+    {% endif %}
+  </div>
+</section>
+
+<section class="py-5 bg-papel-2">
+  <div class="container py-4 text-center">
+    <h2 class="fonte-titulo mb-2">Quer todos os casos, sem limite?</h2>
+    <p class="text-muted mb-4">O Premium libera as disciplinas completas e o conteúdo extra de cada tela.</p>
+    <a href="{% url 'site_publico:planos' %}" class="btn btn-latao btn-lg px-4">Ver planos Premium</a>
+  </div>
+</section>
+
+{% endblock %}

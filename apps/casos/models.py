@@ -2,6 +2,8 @@ from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
+from apps.casos.choices import TipoAcesso, TipoCaso, Duracao
+
 
 class Disciplina(models.Model):
     nome = models.CharField(max_length=100, unique=True)
@@ -16,18 +18,6 @@ class Disciplina(models.Model):
 
 
 class Caso(models.Model):
-    class TipoAcesso(models.TextChoices):
-        GRATIS = "gratis", "Grátis"
-        PREMIUM = "premium", "Premium"
-
-    class TipoCaso(models.TextChoices):
-        PARCIAL = "parcial", "Parcial"
-        COMPLETO = "completo", "Completo"
-
-    class Duracao(models.TextChoices):
-        CURTA = "curta", "Curta"
-        MEDIA = "media", "Média"
-        LONGA = "longa", "Longa"
 
     nome = models.CharField(max_length=150)
     texto_curto = models.CharField(
@@ -42,12 +32,17 @@ class Caso(models.Model):
         Disciplina, on_delete=models.PROTECT, related_name="casos"
     )
     tipo_acesso = models.CharField(
-        max_length=10, choices=TipoAcesso.choices, default=TipoAcesso.GRATIS
+        max_length=10, choices=TipoAcesso, default=TipoAcesso.GRATIS
     )
-    tipo_caso = models.CharField(max_length=10, choices=TipoCaso.choices)
-    duracao = models.CharField(max_length=10, choices=Duracao.choices)
+    tipo_caso = models.CharField(max_length=10, choices=TipoCaso)
+    duracao = models.CharField(max_length=10, choices=Duracao)
 
     ativo = models.BooleanField(default=True)
+    destaque_area_gratuita = models.BooleanField(
+        default=False,
+        help_text="Aparece na área gratuita do site institucional "
+        "(curadoria manual, independente do tipo_acesso).",
+    )
     criado_em = models.DateTimeField(auto_now_add=True)
     atualizado_em = models.DateTimeField(auto_now=True)
 

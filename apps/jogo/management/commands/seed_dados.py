@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 from django.db import transaction
 
+from apps.casos.choices import TipoAcesso, TipoCaso, Duracao
 from apps.casos.models import Caso, Disciplina
 from apps.contas.models import InstituicaoEnsino, Perfil
 from apps.jogo.models import Alternativa, ConteudoExtra, Pergunta
@@ -117,9 +118,9 @@ class Command(BaseCommand):
                     "eventual propositura da ação."
                 ),
                 "disciplina": self.disciplinas["Direito Civil"],
-                "tipo_acesso": Caso.TipoAcesso.GRATIS,
-                "tipo_caso": Caso.TipoCaso.COMPLETO,
-                "duracao": Caso.Duracao.MEDIA,
+                "tipo_acesso": TipoAcesso.GRATIS,
+                "tipo_caso": TipoCaso.COMPLETO,
+                "duracao": Duracao.MEDIA,
             },
         )
         if not criado:

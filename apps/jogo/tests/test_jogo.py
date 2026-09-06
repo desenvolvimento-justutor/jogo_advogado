@@ -9,6 +9,7 @@ from tests.utils import bearer_header
 
 from .. import services
 from ..models import Alternativa, Jogada, Pergunta
+from ...casos.choices import TipoAcesso, TipoCaso, Duracao
 
 User = get_user_model()
 
@@ -29,9 +30,9 @@ class BaseJogoTestCase(TestCase):
             texto_curto="curto",
             texto_detalhado="detalhado",
             disciplina=disciplina,
-            tipo_acesso=Caso.TipoAcesso.GRATIS,
-            tipo_caso=Caso.TipoCaso.COMPLETO,
-            duracao=Caso.Duracao.CURTA,
+            tipo_acesso=TipoAcesso.GRATIS,
+            tipo_caso=TipoCaso.COMPLETO,
+            duracao=Duracao.CURTA,
         )
 
         self.p1 = Pergunta.objects.create(

@@ -8,6 +8,7 @@ from .api import api
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", api.urls),
+    path("accounts/", include("allauth.urls")),
     path("", include("apps.site.urls")),
 ]
 

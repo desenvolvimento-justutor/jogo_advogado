@@ -3,6 +3,7 @@ import json
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
+from apps.casos.choices import TipoAcesso, TipoCaso, Duracao
 from apps.contas.models import Perfil
 from apps.jogo.models import Jogada
 from tests.utils import bearer_header
@@ -25,18 +26,18 @@ class CasosApiTests(TestCase):
             texto_curto="curto",
             texto_detalhado="detalhado",
             disciplina=self.civil,
-            tipo_acesso=Caso.TipoAcesso.GRATIS,
-            tipo_caso=Caso.TipoCaso.COMPLETO,
-            duracao=Caso.Duracao.MEDIA,
+            tipo_acesso=TipoAcesso.GRATIS,
+            tipo_caso=TipoCaso.COMPLETO,
+            duracao=Duracao.MEDIA,
         )
         self.caso_penal = Caso.objects.create(
             nome="Furto Qualificado",
             texto_curto="curto",
             texto_detalhado="detalhado",
             disciplina=self.penal,
-            tipo_acesso=Caso.TipoAcesso.PREMIUM,
-            tipo_caso=Caso.TipoCaso.PARCIAL,
-            duracao=Caso.Duracao.CURTA,
+            tipo_acesso=TipoAcesso.PREMIUM,
+            tipo_caso=TipoCaso.PARCIAL,
+            duracao=Duracao.CURTA,
         )
 
     def test_listar_sem_filtro_retorna_todos_ativos(self):

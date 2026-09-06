@@ -6,3 +6,6 @@ class SiteConfig(AppConfig):
     name = "apps.site"
     label = "site_publico"
     verbose_name = "Site"
+
+    def ready(self):
+        from . import signals  # noqa: F401

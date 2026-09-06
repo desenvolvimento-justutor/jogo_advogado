@@ -3,6 +3,7 @@ import json
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
+from apps.casos.choices import TipoAcesso, TipoCaso, Duracao
 from apps.casos.models import Caso, Disciplina
 from apps.contas.models import Perfil
 from tests.utils import bearer_header
@@ -29,9 +30,9 @@ class BaseJogoTestCase(TestCase):
             texto_curto="curto",
             texto_detalhado="detalhado",
             disciplina=disciplina,
-            tipo_acesso=Caso.TipoAcesso.GRATIS,
-            tipo_caso=Caso.TipoCaso.COMPLETO,
-            duracao=Caso.Duracao.CURTA,
+            tipo_acesso=TipoAcesso.GRATIS,
+            tipo_caso=TipoCaso.COMPLETO,
+            duracao=Duracao.CURTA,
         )
 
         self.p1 = Pergunta.objects.create(
