@@ -1,4 +1,5 @@
 from datetime import date
+from decimal import Decimal
 from typing import Optional
 
 from ninja import Schema
@@ -9,7 +10,8 @@ class PlanoOut(Schema):
     nome: str
     descricao: str
     duracao_dias: int
-    preco_centavos: int
+    preco: Decimal
+    preco_formatado: str
 
 
 class AssinaturaOut(Schema):

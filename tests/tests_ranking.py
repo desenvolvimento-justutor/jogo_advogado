@@ -17,7 +17,7 @@ class AssinaturaTests(TestCase):
         self.user = User.objects.create_user(username="aluno1", password="senha12345")
         Perfil.objects.create(usuario=self.user, nome_jogador="Aluno 1")
         self.plano = PlanoPremium.objects.create(
-            nome="Mensal", duracao_dias=30, preco_centavos=2990
+            nome="Mensal", duracao_dias=30, preco=2990
         )
 
     def _criar_assinatura(self, inicio, fim, ativa=True):

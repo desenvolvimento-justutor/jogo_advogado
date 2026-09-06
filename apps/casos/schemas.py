@@ -24,7 +24,7 @@ class CasoListOut(Schema):
 
 class CasoDetailOut(CasoListOut):
     texto_detalhado: str
-    total_perguntas: int
+    total_perguntas: int = 0
 
 
 class AvaliacaoIn(Schema):

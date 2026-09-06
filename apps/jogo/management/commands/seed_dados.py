@@ -72,7 +72,7 @@ class Command(BaseCommand):
             defaults={
                 "descricao": "Acesso a todos os casos premium por 30 dias.",
                 "duracao_dias": 30,
-                "preco_centavos": 2990,
+                "preco": 2990,
             },
         )
         PlanoPremium.objects.get_or_create(
@@ -80,7 +80,7 @@ class Command(BaseCommand):
             defaults={
                 "descricao": "Acesso a todos os casos premium por 12 meses.",
                 "duracao_dias": 365,
-                "preco_centavos": 24990,
+                "preco": 24990,
             },
         )
         self.stdout.write("  2 planos premium ok")

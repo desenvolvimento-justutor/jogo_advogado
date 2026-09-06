@@ -6,7 +6,7 @@ class PlanoPremium(models.Model):
     nome = models.CharField(max_length=100)
     descricao = models.TextField(blank=True)
     duracao_dias = models.PositiveIntegerField(help_text="Duração do plano em dias.")
-    preco_centavos = models.PositiveIntegerField(help_text="Preço em centavos.")
+    preco = models.DecimalField(decimal_places=2, max_digits=10, default=0)
     ativo = models.BooleanField(default=True)
 
     class Meta:
@@ -15,6 +15,13 @@ class PlanoPremium(models.Model):
 
     def __str__(self):
         return self.nome
+
+    @property
+    def preco_formatado(self):
+        """Formata o preço no padrão brasileiro, ex.: 'R$ 1.580,00'."""
+        valor = f"{self.preco:,.2f}"
+        valor = valor.replace(",", "X").replace(".", ",").replace("X", ".")
+        return f"R$ {valor}"
 
 
 class Assinatura(models.Model):

@@ -5,7 +5,7 @@ from .models import Assinatura, PlanoPremium
 
 @admin.register(PlanoPremium)
 class PlanoPremiumAdmin(admin.ModelAdmin):
-    list_display = ("nome", "duracao_dias", "preco_centavos", "ativo")
+    list_display = ("nome", "duracao_dias", "preco", "ativo")
     list_filter = ("ativo",)
 
 
