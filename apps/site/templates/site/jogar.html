@@ -19,7 +19,7 @@
           <div class="cartao-processo" style="transform:none;">
             <div class="cabecalho">
               <span>Caso concluído</span>
-              <span class="marcador dourado">{{ jogada.pontuacao }} pts</span>
+              <span class="marcador dourado">{{ jogada.pontuacao }}</span>
             </div>
             <div class="linha-tela">
               <span>Você terminou "{{ caso.nome }}" com {{ jogada.pontuacao }} pontos.</span>
@@ -34,7 +34,7 @@
           <div class="d-flex gap-3 mt-4 flex-wrap">
             <form method="post" action="{% url 'site_publico:jogar_reiniciar' caso.id %}">
               {% csrf_token %}
-              <button type="submit" class="btn btn-outline-papel">Jogar de novo</button>
+              <button type="submit" class="btn btn-outline-tinta">Jogar de novo</button>
             </form>
             <a href="{% url 'site_publico:area_gratuita' %}" class="btn btn-latao">Ver outros casos</a>
           </div>

@@ -79,6 +79,16 @@ a:hover { color: var(--latao); }
   background-color: var(--papel);
   color: var(--tinta);
 }
+/* Mesmo estilo, mas para uso sobre fundo claro (--papel) em vez de escuro (--tinta) */
+.btn-outline-tinta {
+  border-color: var(--tinta);
+  color: var(--tinta);
+  font-weight: 600;
+}
+.btn-outline-tinta:hover {
+  background-color: var(--tinta);
+  color: var(--papel);
+}
 
 /* ---------- Hero ---------- */
 .hero {
