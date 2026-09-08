@@ -27,6 +27,7 @@
                 <span>{{ caso.get_duracao_display }}</span>
                 <span>{{ caso.get_tipo_caso_display }}</span>
               </div>
+              <a href="{% url 'site_publico:jogar' caso.id %}" class="btn btn-latao btn-sm w-100 mt-3">Jogar</a>
             </div>
           </div>
         {% endfor %}

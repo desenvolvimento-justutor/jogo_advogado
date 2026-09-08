@@ -1,0 +1,168 @@
+{% extends "site/base.html" %}
+
+{% block titulo %}{{ caso.nome }} — Jogo do Advogado{% endblock %}
+
+{% block conteudo %}
+<section class="py-5 py-lg-6">
+  <div class="container py-4">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <span class="processo-tag mb-0">{{ caso.disciplina.nome }}</span>
+          <span class="fw-semibold text-latao">{{ jogada.pontuacao }} pts</span>
+        </div>
+        <h1 class="fonte-titulo h3 mb-4">{{ caso.nome }}</h1>
+
+        {% if jogada.finalizada %}
+
+          <div class="cartao-processo" style="transform:none;">
+            <div class="cabecalho">
+              <span>Caso concluído</span>
+              <span class="marcador dourado">{{ jogada.pontuacao }} pts</span>
+            </div>
+            <div class="linha-tela">
+              <span>Você terminou "{{ caso.nome }}" com {{ jogada.pontuacao }} pontos.</span>
+            </div>
+            {% if not jogada.conta_para_ranking %}
+              <div class="linha-tela">
+                <span class="text-muted small">Esta foi uma repetição — só a primeira tentativa conta pro ranking.</span>
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="d-flex gap-3 mt-4 flex-wrap">
+            <form method="post" action="{% url 'site_publico:jogar_reiniciar' caso.id %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-outline-papel">Jogar de novo</button>
+            </form>
+            <a href="{% url 'site_publico:area_gratuita' %}" class="btn btn-latao">Ver outros casos</a>
+          </div>
+
+        {% elif pergunta %}
+
+          {# ---------- Barra de progresso simples ---------- #}
+          <div class="progress mb-4" style="height: 6px;">
+            <div class="progress-bar" role="progressbar"
+                 style="width: {% widthratio pergunta.ordem caso.perguntas.count 100 %}%; background: var(--latao);"></div>
+          </div>
+
+          <div class="cartao-processo mb-4" style="transform:none;">
+            {% if pergunta.titulo %}
+              <div class="cabecalho">
+                <span>{{ pergunta.titulo }}</span>
+              </div>
+            {% endif %}
+            {% if pergunta.imagem %}
+              <img src="{{ pergunta.imagem.url }}" alt="" class="img-fluid rounded mb-3">
+            {% endif %}
+            {% if pergunta.texto %}
+              <div class="linha-tela">
+                <span>{{ pergunta.texto }}</span>
+              </div>
+            {% endif %}
+          </div>
+
+          {# ---------- Conteúdo extra (telas de pontuação com extra) ---------- #}
+          {% if conteudos_extra %}
+            <div class="mb-4">
+              {% for extra in conteudos_extra %}
+                <details class="cartao-auth mb-2" style="max-width:none;">
+                  <summary class="fw-semibold" style="cursor:pointer;">{{ extra.get_tipo_display }}</summary>
+                  <p class="mt-2 mb-0 text-muted">{{ extra.texto }}</p>
+                  {% if extra.tipo == "questao_concurso" and extra.resposta %}
+                    <details class="mt-2">
+                      <summary class="small">Ver resposta</summary>
+                      <p class="mt-1 mb-0">{{ extra.resposta }}</p>
+                    </details>
+                  {% endif %}
+                </details>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          <form method="post" id="form-resposta">
+            {% csrf_token %}
+            <input type="hidden" name="tempo_esgotado" id="tempo_esgotado" value="0">
+
+            {% if pergunta.tipo == Tipo.ALTERNATIVAS %}
+              {% if pergunta.tempo_resposta_segundos %}
+                <div class="mb-3 small text-muted">
+                  Tempo restante: <span id="cronometro" class="fw-semibold">{{ pergunta.tempo_resposta_segundos }}</span>s
+                </div>
+              {% endif %}
+              <div class="list-group mb-4">
+                {% for alt in alternativas %}
+                  <label class="list-group-item d-flex gap-2">
+                    <input class="form-check-input flex-shrink-0" type="radio" name="alternativa_id" value="{{ alt.id }}" required>
+                    <span>{{ alt.texto }}</span>
+                  </label>
+                {% endfor %}
+              </div>
+
+            {% elif pergunta.tipo == Tipo.COLETA_ALTERNATIVAS %}
+              <div class="list-group mb-4">
+                {% for alt in alternativas %}
+                  <label class="list-group-item d-flex gap-2">
+                    <input class="form-check-input flex-shrink-0" type="checkbox" name="alternativa_ids" value="{{ alt.id }}">
+                    <span>{{ alt.texto }}</span>
+                  </label>
+                {% endfor %}
+              </div>
+
+            {% elif pergunta.tipo == Tipo.COLETA_TEXTO %}
+              <div class="mb-4">
+                <textarea class="form-control" name="texto_resposta" rows="4" placeholder="Escreva sua resposta..."></textarea>
+              </div>
+
+            {% elif pergunta.tipo == Tipo.COLETA_NUMERO %}
+              <div class="mb-4">
+                <input type="number" step="any" class="form-control" name="numero_resposta" placeholder="0">
+              </div>
+
+            {% endif %}
+
+            <button type="submit" class="btn btn-latao btn-lg px-4">
+              {% if pergunta.tipo == Tipo.INFORMATIVA or pergunta.tipo == Tipo.SO_IMAGEM or pergunta.tipo == Tipo.PONTUACAO or pergunta.tipo == Tipo.PONTUACAO_EXTRA %}
+                Continuar
+              {% else %}
+                Responder
+              {% endif %}
+            </button>
+          </form>
+
+          {% if pergunta.tipo == Tipo.SO_IMAGEM and pergunta.tempo_exibicao_segundos %}
+            <script>
+              setTimeout(function () {
+                document.getElementById("form-resposta").submit();
+              }, {{ pergunta.tempo_exibicao_segundos }} * 1000);
+            </script>
+          {% endif %}
+
+          {% if pergunta.tipo == Tipo.ALTERNATIVAS and pergunta.tempo_resposta_segundos %}
+            <script>
+              (function () {
+                var restante = {{ pergunta.tempo_resposta_segundos }};
+                var span = document.getElementById("cronometro");
+                var intervalo = setInterval(function () {
+                  restante -= 1;
+                  if (span) span.textContent = restante;
+                  if (restante <= 0) {
+                    clearInterval(intervalo);
+                    document.getElementById("tempo_esgotado").value = "1";
+                    document.getElementById("form-resposta").submit();
+                  }
+                }, 1000);
+              })();
+            </script>
+          {% endif %}
+
+        {% else %}
+          <p class="text-muted">Não foi possível carregar a próxima tela deste caso.</p>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
