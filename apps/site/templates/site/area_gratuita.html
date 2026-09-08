@@ -20,6 +20,9 @@
         {% for caso in casos %}
           <div class="col-md-4">
             <div class="aba-caso">
+              {% if caso.imagem_capa %}
+                <img src="{{ caso.imagem_capa.url }}" alt="" class="capa">
+              {% endif %}
               <span class="disciplina selo-gratis">{{ caso.disciplina.nome }} · Grátis</span>
               <h5>{{ caso.nome }}</h5>
               <p class="text-muted small mb-0">{{ caso.texto_curto }}</p>

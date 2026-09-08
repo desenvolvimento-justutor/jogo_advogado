@@ -114,6 +114,9 @@
       {% for caso in casos_destaque %}
         <div class="col-md-4">
           <div class="aba-caso {% if caso.tipo_acesso == 'premium' %}premium{% endif %}">
+            {% if caso.imagem_capa %}
+              <img src="{{ caso.imagem_capa.url }}" alt="" class="capa">
+            {% endif %}
             <span class="disciplina">
               {{ caso.disciplina.nome }} · {% if caso.tipo_acesso == 'premium' %}Premium{% else %}Grátis{% endif %}
             </span>
